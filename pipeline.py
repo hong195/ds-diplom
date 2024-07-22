@@ -2,8 +2,9 @@ from datetime import datetime
 
 import dill
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
 
-from sklearn.linear_model import SGDClassifier, LogisticRegression
+from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import OneHotEncoder, StandardScaler, FunctionTransformer
 from sklearn.impute import SimpleImputer
@@ -71,8 +72,8 @@ def main():
     ])
 
     models = [
-        SGDClassifier(loss='log_loss'),
-        LogisticRegression(solver='liblinear'),
+        SGDClassifier(loss="log_loss"),
+        RandomForestClassifier(),
     ]
 
     best_score = .0
@@ -86,7 +87,7 @@ def main():
 
         score = cross_val_score(pipe, X, y, cv=5, scoring='roc_auc')
 
-        print(f'model: {type(model).__name__}, acc_mean: {score.mean():.4f}, acc_std: {score.std():.4f}')
+        print(f'model: {type(model).__name__}, roc_auc_mean: {score.mean():.4f}, acc_std: {score.std():.4f}')
         if score.mean() > best_score:
             best_score = score.mean()
             best_pipe = pipe
